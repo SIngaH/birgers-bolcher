@@ -1,4 +1,5 @@
 REMEMBER TO OPEN XAMPP AND PRESS START!!!!!
+
 Øvelse 1
 
 1.1 Opret en database kaldet birgers_bolcher med én tabel kaldet bolche
@@ -132,27 +133,21 @@ REMEMBER TO OPEN XAMPP AND PRESS START!!!!!
     WHERE bolcher.bolche_id = FLOOR (RAND()*(8-1+1)+1) LIMIT 1 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
-Øvelse 5 - Brian tager det på tavlen senere
+Øvelse 5 
 
 Nettopris for et bolche er råvareprisen plus 250 % (begge uden moms)
-moms er 25%
-
-denne her tager alle tallene i tabellen og ganger dem med 2.5 (råvareprisen)
-    SELECT 2.5 * bolche_raavarepris.bolche_raavarepris_beskrivelse, `bolche_navn` 
-    FROM `bolcher` 
-    INNER JOIN `bolche_raavarepris` 
-    ON bolcher.FK_bolche_raavarepris_id = bolche_raavarepris.bolche_raavarepris_id 
-
-denne gør det samme men her kan man også se de to forskellige id columns (råvareprisen)
-    SELECT 2.5 * bolche_raavarepris.bolche_raavarepris_beskrivelse, bolche_raavarepris.bolche_raavarepris_beskrivelse,  bolche_raavarepris.bolche_raavarepris_id, `bolche_navn` 
-    FROM `bolcher` 
-    INNER JOIN `bolche_raavarepris` 
-    ON bolcher.FK_bolche_raavarepris_id = bolche_raavarepris.bolche_raavarepris_id 
+moms er 25% 
 
 5.1 Udskriv en prisliste med bolchenavn og kilopris henholdsvis med og uden moms
-
-
-
+    SELECT `bolche_navn`, 
+    ((1000 / bolche_vaegt.bolche_vaegt_beskrivelse) * (bolche_raavarepris.bolche_raavarepris_beskrivelse / 100) * 2.5) AS nettopris, 
+    (((1000 / bolche_vaegt.bolche_vaegt_beskrivelse) * (bolche_raavarepris.bolche_raavarepris_beskrivelse / 100) * 2.5) * 1.25) AS  nettopris_med_moms 
+    FROM `bolcher` 
+    INNER JOIN `bolche_raavarepris` 
+    ON bolcher.FK_bolche_raavarepris_id = bolche_raavarepris.bolche_raavarepris_id 
+    INNER JOIN `bolche_vaegt` 
+    ON bolcher.FK_bolche_vaegt_id = bolche_vaegt.bolche_vaegt_id 
+    
 -------------------------------------------------------------------------------------------------------------------------------------------
 
 Øvelse 6
@@ -181,7 +176,10 @@ denne gør det samme men her kan man også se de to forskellige id columns (råv
 
 6.5 Udskriv gennemsnitsprisen per bolche
     Udefra råvareprisen
-    SELECT AVG(`bolche_raavarepris_beskrivelse`) FROM bolche_raavarepris
+    SELECT AVG(`bolche_raavarepris_beskrivelse`) 
+    FROM bolcher 
+    INNER JOIN `bolche_raavarepris` 
+    ON bolcher.FK_bolche_raavarepris_id = bolche_raavarepris.bolche_raavarepris_id 
 
 6.6 Udskriv navn og pris på det dyreste og billigste bolche
 
